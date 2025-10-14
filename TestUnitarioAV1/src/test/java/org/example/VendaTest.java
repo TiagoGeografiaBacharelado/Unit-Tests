@@ -47,7 +47,7 @@ public class VendaTest {
         boolean sucesso = venda.realizarVenda();
 
         assertFalse(sucesso, "A venda deve retornar false quando a quantidade é maior que o estoque.");
-        assertEquals(10, produto.getEstoque(), "Estoque não deve ser alterado quando a venda falha.");
+        assertEquals(10, venda.getProduto().getEstoque(), "Estoque não deve ser alterado quando a venda falha.");
         assertEquals(0.0, venda.getTotalVenda(), 0.0001, "Total da venda deve permanecer 0 em venda falha.");
     }
 
@@ -61,11 +61,12 @@ public class VendaTest {
     }
 
     @Test
-    public void deveVendaComProdutoNuloDeveFalhar() {
+    public void deveVenderComProdutoNuloDeveFalhar() {
         Venda venda = new Venda(null, 1);
 
-        assertThrows(NullPointerException.class, venda::realizarVenda,
-                "Realizar venda com produto nulo deve lançar NullPointerException (comportamento atual).");
+        assertThrows(NullPointerException.class, () -> {
+            venda.realizarVenda();
+        }, "Realizar venda com produto nulo deve lançar NullPointerException (comportamento atual).");
     }
 
     @Test
@@ -80,9 +81,9 @@ public class VendaTest {
     }
 
 
-    @Test // Testar criação de vários produtos e realizar vendas com estoque compartilhado.
+    @Test
     public void deveCriarVendasMultipasCompartilhamEstoqueDoMesmoProduto() {
-        // cria duas vendas sobre o mesmo produto
+
         Venda v1 = new Venda(produto, 4);
         Venda v2 = new Venda(produto, 3);
 
@@ -93,7 +94,7 @@ public class VendaTest {
         assertEquals(3, produto.getEstoque(), "Estoque após segunda venda deve ser 3");
     }
 
-    @Test // Testar calcular total de venda quando o preço do produto for alterado antes da venda.
+    @Test
     public void deveCalcularTotalRefleteMudancaDePrecoAntesDaVenda() {
         produto.setPreco(60.0);
         Venda venda = new Venda(produto, 2);
@@ -102,7 +103,7 @@ public class VendaTest {
                 "Total deve considerar o preço atualizado antes da venda");
     }
 
-    @Test // Testar comportamento da venda quando o estoque inicial é zero.
+    @Test
     public void deveVenderFalhaQuandoEstoqueInicialZero() {
         Produto pZero = new Produto("Boné", 20.0, 0);
         Venda venda = new Venda(pZero, 1);
