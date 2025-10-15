@@ -18,6 +18,10 @@ public class VendaTest {
     @Test
     public void deveVenderQuantidadeMenorEstoqueDisponivel() {
         Venda venda = new Venda(produto, 3);
+
+        // garante que o getter é executado e retorna o valor esperado
+        assertEquals(3, venda.getQuantidadeVendida(), "getQuantidadeVendida deve retornar a quantidade informada");
+
         boolean sucesso = venda.realizarVenda();
 
         assertTrue(sucesso, "A venda deve retornar true quando há estoque suficiente.");
